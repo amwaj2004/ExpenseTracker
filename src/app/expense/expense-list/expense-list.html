@@ -1,1 +1,42 @@
-<p>expense-list works!</p>
+<div class="page">
+  <div class="page-header">
+    <h2>Expenses</h2>
+    <a routerLink="/expenses/new" class="btn btn-primary">+ Add Expense</a>
+  </div>
+
+  @if (errorMessage) {
+    <p class="error-msg">{{ errorMessage }}</p>
+  }
+
+  @if (expenses.length === 0 && !errorMessage) {
+    <p class="empty">No expenses found. Add one to get started!</p>
+  }
+
+  @if (expenses.length > 0) {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (expense of expenses; track expense._id) {
+          <tr>
+            <td>{{ expense.description }}</td>
+            <td>${{ expense.amount.toFixed(2) }}</td>
+            <td>{{ formatDate(expense.date) }}</td>
+            <td>{{ getCategoryName(expense.category) }}</td>
+            <td class="actions">
+              <button class="btn btn-sm btn-secondary" (click)="editExpense(expense._id)">Edit</button>
+              <button class="btn btn-sm btn-danger" (click)="deleteExpense(expense._id)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

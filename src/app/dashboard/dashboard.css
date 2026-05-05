@@ -1,0 +1,41 @@
+.summary-cards {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.summary-cards .card {
+  flex: 1;
+  min-width: 160px;
+  text-align: center;
+}
+
+.card-label {
+  font-size: 0.85rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h3 {
+  margin-bottom: 1rem;
+  color: #34495e;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}

@@ -1,1 +1,36 @@
-<p>category-list works!</p>
+<div class="page">
+  <div class="page-header">
+    <h2>Categories</h2>
+    <a routerLink="/categories/new" class="btn btn-primary">+ Add Category</a>
+  </div>
+
+  @if (errorMessage) {
+    <p class="error-msg">{{ errorMessage }}</p>
+  }
+
+  @if (categories.length === 0 && !errorMessage) {
+    <p class="empty">No categories yet. Add one to get started!</p>
+  }
+
+  @if (categories.length > 0) {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Category Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cat of categories; track cat._id) {
+          <tr>
+            <td>{{ cat.name }}</td>
+            <td class="actions">
+              <button class="btn btn-sm btn-secondary" (click)="editCategory(cat._id)">Edit</button>
+              <button class="btn btn-sm btn-danger" (click)="deleteCategory(cat._id)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

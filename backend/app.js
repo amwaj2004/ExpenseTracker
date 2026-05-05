@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,9 +11,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('your-mongodb-connection-string') //UPDATE THIS
+mongoose
+  .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/expensetracker')
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('Connection error:', err));
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/categories', categoryRoutes);
