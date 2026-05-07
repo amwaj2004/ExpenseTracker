@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,14 +18,24 @@ export class ExpenseList implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private expenseService: ExpenseService, private router: Router) {}
+  constructor(
+    private expenseService: ExpenseService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    // Subscribe to expenses$ for real-time updates (including deletions)
     this.expenseService.expenses$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.expenses = data;
+      this.cdr.detectChanges();
     });
 
+    // Load initial data from backend
     this.expenseService.getAll().subscribe({
+      next: () => {
+        this.errorMessage = '';
+      },
       error: (err) => {
         console.error('Failed to load expenses:', err);
         this.errorMessage = 'Could not load expenses. Is the backend running?';
@@ -57,11 +67,17 @@ export class ExpenseList implements OnInit, OnDestroy {
   deleteExpense(id: string | undefined): void {
     if (!id) return;
     if (!confirm('Delete this expense?')) return;
-    // tap() in the service removes the item from the subject automatically
+    // delete() uses tap() to update the expenses$ subject,
+    // triggering the subscription in ngOnInit to update the view automatically
     this.expenseService.delete(id).subscribe({
+      next: () => {
+        this.errorMessage = '';
+        this.cdr.detectChanges();
+      },
       error: (err) => {
         console.error('Failed to delete expense:', err);
         this.errorMessage = 'Could not delete expense.';
+        this.cdr.detectChanges();
       },
     });
   }

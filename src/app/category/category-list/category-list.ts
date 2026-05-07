@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -17,17 +17,26 @@ export class CategoryList implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private categoryService: CategoryService, private router: Router) {}
+  constructor(
+    private categoryService: CategoryService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.categoryService.categories$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.categories = data;
+      this.cdr.detectChanges();
     });
 
     this.categoryService.getAll().subscribe({
+      next: () => {
+        this.errorMessage = '';
+      },
       error: (err) => {
         console.error('Failed to load categories:', err);
         this.errorMessage = 'Could not load categories. Is the backend running?';
+        this.cdr.detectChanges();
       },
     });
   }
@@ -44,11 +53,15 @@ export class CategoryList implements OnInit, OnDestroy {
   deleteCategory(id: string | undefined): void {
     if (!id) return;
     if (!confirm('Delete this category?')) return;
-    // tap() in the service removes the item from the subject automatically
     this.categoryService.delete(id).subscribe({
+      next: () => {
+        this.errorMessage = '';
+        this.cdr.detectChanges();
+      },
       error: (err) => {
         console.error('Failed to delete category:', err);
         this.errorMessage = 'Could not delete category.';
+        this.cdr.detectChanges();
       },
     });
   }
