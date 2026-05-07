@@ -5,7 +5,7 @@ const Category = require('../models/category');
 ========================= */
 exports.getCategories = async (req, res) => {
     const categories = await Category.find();
-    res.json(categories);
+    res.status(200).json(categories);
 };
 
 /* =========================
@@ -13,7 +13,7 @@ exports.getCategories = async (req, res) => {
 ========================= */
 exports.getCategory = async (req, res) => {
     const category = await Category.findById(req.params.id);
-    res.json(category);
+    res.status(200).json(category);
 };
 
 /* =========================
@@ -24,7 +24,7 @@ exports.createCategory = async (req, res) => {
         name: req.body.name
     });
     const saved = await category.save();
-    res.json(saved);
+    res.status(201).json(saved);
 };
 
 /* =========================
@@ -36,7 +36,7 @@ exports.updateCategory = async (req, res) => {
         req.body,
         { new: true }
     );
-    res.json(updated);
+    res.status(200).json(updated);
 };
 
 /* =========================
@@ -44,5 +44,5 @@ exports.updateCategory = async (req, res) => {
 ========================= */
 exports.deleteCategory = async (req, res) => {
     await Category.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Deleted' });
+    res.status(200).json({ message: 'Deleted' });
 };

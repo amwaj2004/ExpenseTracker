@@ -5,7 +5,7 @@ const Expense = require('../models/expense');
 ========================= */
 exports.getExpenses = async (req, res) => {
     const expenses = await Expense.find().populate('category');
-    res.json(expenses);
+    res.status(200).json(expenses);
 };
 
 /* =========================
@@ -13,7 +13,7 @@ exports.getExpenses = async (req, res) => {
 ========================= */
 exports.getExpense = async (req, res) => {
     const expense = await Expense.findById(req.params.id).populate('category');
-    res.json(expense);
+    res.status(200).json(expense);
 };
 
 /* =========================
@@ -27,7 +27,7 @@ exports.createExpense = async (req, res) => {
         category: req.body.category
     });
     const saved = await expense.save();
-    res.json(saved);
+    res.status(201).json(saved);
 };
 
 /* =========================
@@ -39,7 +39,7 @@ exports.updateExpense = async (req, res) => {
         req.body,
         { new: true }
     );
-    res.json(updated);
+    res.status(200).json(updated);
 };
 
 /* =========================
@@ -47,5 +47,5 @@ exports.updateExpense = async (req, res) => {
 ========================= */
 exports.deleteExpense = async (req, res) => {
     await Expense.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Deleted' });
+    res.status(200).json({ message: 'Deleted' });
 };
