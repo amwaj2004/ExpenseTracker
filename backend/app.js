@@ -1,4 +1,6 @@
 require('dotenv').config();
+
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -16,7 +18,16 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
+// API routes first
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/categories', categoryRoutes);
+
+// Serve Angular build files
+app.use(express.static(path.join(__dirname, '../dist/expense-tracker/browser')));
+
+// Catch-all route for Angular routing
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/expense-tracker/browser/index.html'));
+});
 
 module.exports = app;
