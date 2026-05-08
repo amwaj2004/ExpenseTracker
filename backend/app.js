@@ -23,11 +23,11 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/categories', categoryRoutes);
 
 // Serve Angular build files
-app.use(express.static(path.join(__dirname, '../dist/expense-tracker/browser')));
+app.use(express.static(path.join(__dirname, '../dist/ExpenseTracker')));
 
 // Catch-all route for Angular routing
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/expense-tracker/browser/index.html'));
+  res.sendFile(path.join(__dirname, '../dist/ExpenseTracker/index.html'));
 });
 
 module.exports = app;
